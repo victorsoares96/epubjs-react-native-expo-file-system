@@ -55,8 +55,8 @@
   "devDependencies": {
     "@types/react": "18.2.65",
     "@types/jest": "29.5.12",
-    "@typescript-eslint/eslint-plugin": "5.62.0",
-    "@typescript-eslint/parser": "5.62.0",
+    "@typescript-eslint/eslint-plugin": "7.2.0",
+    "@typescript-eslint/parser": "7.2.0",
     "commitizen": "4.3.0",
     "commitizen-emoji": "1.0.5",
     "copyfiles": "2.4.1",
