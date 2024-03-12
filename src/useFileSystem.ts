@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import * as ExpoFileSystem from 'expo-file-system';
 import type { DownloadProgressData } from 'expo-file-system';
-import type { FileSystem } from './types';
+import type { FileInfo, FileSystem } from './types';
 
 export function useFileSystem(): FileSystem {
   const [file, setFile] = useState<string | null>(null);
@@ -60,7 +60,7 @@ export function useFileSystem(): FileSystem {
       exists,
       isDirectory,
       size: fileSize,
-    } = await ExpoFileSystem.getInfoAsync(fileUri);
+    } = (await ExpoFileSystem.getInfoAsync(fileUri)) as FileInfo;
 
     return {
       uri,
