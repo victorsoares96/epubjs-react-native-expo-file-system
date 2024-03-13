@@ -76,10 +76,6 @@
     "expo-file-system": "16.0.8",
     "typescript": "5.4.2"
   },
-  "engines": {
-    "yarn": ">= 1.22.0",
-    "node": ">=20.0.0"
-  },
   "config": {
     "commitizen": {
       "path": "./node_modules/commitizen-emoji"
