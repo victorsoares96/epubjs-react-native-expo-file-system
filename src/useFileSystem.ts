@@ -69,6 +69,7 @@ export function useFileSystem(): FileSystem {
       size: fileSize,
     };
   }, []);
+
   return {
     file,
     progress,
@@ -76,6 +77,8 @@ export function useFileSystem(): FileSystem {
     size,
     error,
     success,
+    documentDirectory: ExpoFileSystem.documentDirectory,
+    writeAsStringAsync: ExpoFileSystem.writeAsStringAsync,
     downloadFile,
     getFileInfo,
   };

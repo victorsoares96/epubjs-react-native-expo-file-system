@@ -1,6 +1,6 @@
 {
   "name": "@epubjs-react-native/expo-file-system",
-  "version": "1.1.1",
+  "version": "1.1.2-beta.0",
   "description": "An expo file system module for epubjs-react-native library",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -24,7 +24,7 @@
     "build": "npm run build:cjs && npm run build:esm && npm run build:types",
     "postbuild": "npm run copy-files:cjs && npm run copy-files:esm",
     "prerelease": "npm run lint:fix && npm run type-check && npm run test:coverage",
-    "release": "npm run build && npm publish",
+    "release": "npm run build && npm publish --tag beta",
     "release-local": "npm run build && npm link && echo [FINISH]: Run \"npm link react-intl-universal-reporter\" to link the package to your project"
   },
   "publishConfig": {

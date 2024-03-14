@@ -1,3 +1,5 @@
+import { WritingOptions } from 'expo-file-system';
+
 export type FileSystem = {
   file: string | null;
   progress: number;
@@ -5,6 +7,12 @@ export type FileSystem = {
   size: number;
   error: string | null;
   success: boolean;
+  documentDirectory: string | null;
+  writeAsStringAsync: (
+    fileUri: string,
+    contents: string,
+    options?: WritingOptions
+  ) => Promise<void>;
   downloadFile: (
     fromUrl: string,
     toFile: string
