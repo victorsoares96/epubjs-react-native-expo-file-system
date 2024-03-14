@@ -78,7 +78,11 @@ export function useFileSystem(): FileSystem {
     error,
     success,
     documentDirectory: ExpoFileSystem.documentDirectory,
+    cacheDirectory: ExpoFileSystem.cacheDirectory,
+    bundleDirectory: ExpoFileSystem.bundleDirectory,
+    readAsStringAsync: ExpoFileSystem.readAsStringAsync,
     writeAsStringAsync: ExpoFileSystem.writeAsStringAsync,
+    deleteAsync: ExpoFileSystem.deleteAsync,
     downloadFile,
     getFileInfo,
   };
