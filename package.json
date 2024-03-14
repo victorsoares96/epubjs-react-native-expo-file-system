@@ -46,14 +46,14 @@
   },
   "homepage": "https://github.com/victorsoares96/lib-template#readme",
   "resolutions": {
-    "@types/react": "18.2.65"
+    "@types/react": "18.2.66"
   },
   "peerDependencies": {
     "react": "*",
     "expo-file-system": "16.0.8"
   },
   "devDependencies": {
-    "@types/react": "18.2.65",
+    "@types/react": "18.2.66",
     "@types/jest": "29.5.12",
     "@typescript-eslint/eslint-plugin": "7.2.0",
     "@typescript-eslint/parser": "7.2.0",
