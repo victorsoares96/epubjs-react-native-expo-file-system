@@ -72,7 +72,7 @@
     "prettier": "3.2.5",
     "rimraf": "5.0.5",
     "react": "18.2.0",
-    "ts-jest": "29.1.2",
+    "ts-jest": "29.2.5",
     "expo-file-system": "16.0.8",
     "typescript": "5.4.2"
   },
