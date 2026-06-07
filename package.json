@@ -48,14 +48,14 @@
   },
   "homepage": "https://github.com/victorsoares96/epubjs-react-native-expo-file-system#readme",
   "resolutions": {
-    "@types/react": "18.3.18"
+    "@types/react": "18.3.31"
   },
   "peerDependencies": {
     "react": "*",
     "expo-file-system": "*"
   },
   "devDependencies": {
-    "@types/react": "18.3.18",
+    "@types/react": "18.3.31",
     "@types/jest": "29.5.14",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
