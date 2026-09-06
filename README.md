@@ -1,6 +1,8 @@
 # epubjs-react-native-expo-file-system
 
-> epubjs-react-native-expo-file-system is a module that provides a file system for the epubjs-react-native library.
+> File system adapter for [epubjs-react-native](https://github.com/victorsoares96/epubjs-react-native) on Expo.
+
+Requires **Expo SDK 54+** (`expo-file-system >= 54.0.0`). v2 uses the `File` / `Directory` / `Paths` API.
 
 ## Usage
 

@@ -1,7 +1,18 @@
+import { Directory, File, Paths } from 'expo-file-system';
 import { useCallback, useState } from 'react';
-import * as ExpoFileSystem from 'expo-file-system';
-import type { DownloadProgressData } from 'expo-file-system';
-import type { FileInfo, FileSystem } from './types';
+import type { FileSystem } from './types';
+
+function withTrailingSlash(uri: string): string {
+  return uri.endsWith('/') ? uri : `${uri}/`;
+}
+
+function directoryUri(directory: Directory | null | undefined): string | null {
+  if (!directory?.uri) {
+    return null;
+  }
+
+  return withTrailingSlash(directory.uri);
+}
 
 export function useFileSystem(): FileSystem {
   const [file, setFile] = useState<string | null>(null);
@@ -12,42 +23,41 @@ export function useFileSystem(): FileSystem {
   const [success, setSuccess] = useState<boolean>(false);
 
   const downloadFile = useCallback((fromUrl: string, toFile: string) => {
-    const callback = (downloadProgress: DownloadProgressData) => {
-      const currentProgress = Math.round(
-        (downloadProgress.totalBytesWritten /
-          downloadProgress.totalBytesExpectedToWrite) *
-          100
-      );
-      setProgress(currentProgress);
-    };
-
-    const downloadResumable = ExpoFileSystem.createDownloadResumable(
-      fromUrl,
-      ExpoFileSystem.documentDirectory + toFile,
-      { cache: true },
-      callback
-    );
+    const destination = new File(Paths.document, toFile);
 
     setDownloading(true);
-    return downloadResumable
-      .downloadAsync()
-      .then((value) => {
-        if (!value) throw new Error('Download failed');
+    setProgress(0);
 
-        if (value.headers['Content-Length']) {
-          setSize(Number(value.headers['Content-Length']));
+    return File.downloadFileAsync(fromUrl, destination, {
+      idempotent: true,
+      onProgress: ({ bytesWritten, totalBytes }) => {
+        if (totalBytes > 0) {
+          setProgress(Math.round((bytesWritten / totalBytes) * 100));
         }
-
+      },
+    })
+      .then((downloaded) => {
+        setSize(downloaded.size);
         setSuccess(true);
         setError(null);
-        setFile(value.uri);
+        setFile(downloaded.uri);
+        setProgress(100);
 
-        return { uri: value.uri, mimeType: value.mimeType };
+        return {
+          uri: downloaded.uri,
+          mimeType: downloaded.type || null,
+        };
       })
       .catch((err) => {
         if (err instanceof Error) {
           setError(err.message);
-        } else setError('Error downloading file');
+        } else {
+          setError('Error downloading file');
+        }
+
+        setSuccess(false);
+        setFile(null);
+        setSize(0);
 
         return { uri: null, mimeType: null };
       })
@@ -55,19 +65,74 @@ export function useFileSystem(): FileSystem {
   }, []);
 
   const getFileInfo = useCallback(async (fileUri: string) => {
-    const {
-      uri,
-      exists,
-      isDirectory,
-      size: fileSize,
-    } = (await ExpoFileSystem.getInfoAsync(fileUri)) as FileInfo;
+    const directory = new Directory(fileUri);
+
+    if (directory.exists) {
+      return {
+        uri: directory.uri,
+        exists: true,
+        isDirectory: true,
+        size: directory.size ?? undefined,
+      };
+    }
+
+    const target = new File(fileUri);
 
     return {
-      uri,
-      exists,
-      isDirectory,
-      size: fileSize,
+      uri: target.uri,
+      exists: target.exists,
+      isDirectory: false,
+      size: target.exists ? target.size : undefined,
     };
+  }, []);
+
+  const readAsStringAsync = useCallback(
+    async (
+      fileUri: string,
+      options?: {
+        encoding?: 'utf8' | 'base64';
+      }
+    ) => {
+      const target = new File(fileUri);
+
+      if (options?.encoding === 'base64') {
+        return target.base64();
+      }
+
+      return target.text();
+    },
+    []
+  );
+
+  const writeAsStringAsync = useCallback(
+    async (
+      fileUri: string,
+      contents: string,
+      options?: {
+        encoding?: 'utf8' | 'base64';
+      }
+    ) => {
+      const target = new File(fileUri);
+      await target.write(contents, {
+        encoding: options?.encoding ?? 'utf8',
+      });
+    },
+    []
+  );
+
+  const deleteAsync = useCallback(async (fileUri: string) => {
+    const target = new File(fileUri);
+
+    if (target.exists) {
+      target.delete();
+      return;
+    }
+
+    const directory = new Directory(fileUri);
+
+    if (directory.exists) {
+      directory.delete();
+    }
   }, []);
 
   return {
@@ -77,12 +142,12 @@ export function useFileSystem(): FileSystem {
     size,
     error,
     success,
-    documentDirectory: ExpoFileSystem.documentDirectory,
-    cacheDirectory: ExpoFileSystem.cacheDirectory,
-    bundleDirectory: ExpoFileSystem.bundleDirectory || undefined,
-    readAsStringAsync: ExpoFileSystem.readAsStringAsync,
-    writeAsStringAsync: ExpoFileSystem.writeAsStringAsync,
-    deleteAsync: ExpoFileSystem.deleteAsync,
+    documentDirectory: directoryUri(Paths.document),
+    cacheDirectory: directoryUri(Paths.cache),
+    bundleDirectory: directoryUri(Paths.bundle) ?? undefined,
+    readAsStringAsync,
+    writeAsStringAsync,
+    deleteAsync,
     downloadFile,
     getFileInfo,
   };
