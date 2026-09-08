@@ -57,7 +57,7 @@
     "@biomejs/biome": "2.5.12",
     "@types/jest": "29.5.14",
     "@types/react": "19.2.18",
-    "commitizen": "4.3.1",
+    "commitizen": "4.3.2",
     "commitizen-emoji": "1.0.5",
     "copyfiles": "2.4.1",
     "expo-file-system": "57.0.6",
